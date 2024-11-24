@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  width: 400px;
+  min-height: 300px;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  margin: 0;
+}
+
+.container {
+  @apply flex flex-col gap-4 min-h-[300px];
+}
+
+h1 {
+  @apply text-2xl font-bold text-center mb-4 text-green-400;
+}
+
+.domain-container {
+  @apply bg-gray-800 rounded-lg p-4 mb-2 transition-all duration-300 hover:transform hover:scale-102 border border-gray-700;
+}
+
+.level-bar {
+  @apply flex flex-col gap-2;
+}
+
+.domain-info {
+  @apply flex justify-between items-center;
+}
+
+.domain-name {
+  @apply font-semibold text-lg text-white;
+}
+
+.domain-level {
+  @apply text-green-400 font-bold px-2 py-1 bg-gray-900 rounded;
+}
+
+.progress-bar {
+  @apply w-full h-4 bg-gray-700 rounded-full overflow-hidden border border-gray-600;
+}
+
+.progress {
+  @apply h-full bg-gradient-to-r from-green-500 to-green-400 transition-all duration-300;
+}
+
+.stats {
+  @apply flex justify-between text-sm text-gray-400 mt-2;
+}
+
+.empty-state {
+  @apply flex flex-col items-center justify-center h-[200px] text-center p-4 bg-gray-800 rounded-lg border border-gray-700;
+}
+
+.error-state {
+  @apply flex flex-col items-center justify-center h-[200px] text-center p-4 bg-gray-800 rounded-lg border border-red-800;
+}
+
+#domains-container {
+  @apply flex flex-col gap-3 overflow-y-auto max-h-[400px] p-1;
+}
