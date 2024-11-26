@@ -2,64 +2,250 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --accent-primary: #4ade80;
+  --accent-secondary: #34d399;
+  --border-color: #374151;
+  --card-bg: #1f2937;
+  --card-hover: #374151;
+  --card-active: #4b5563;
+  --tooltip-bg: #111827;
+  --tooltip-border: #374151;
+  --progress-shine: rgba(255, 255, 255, 0.2);
+  --progress-glow: rgba(74, 222, 128, 0.4);
+}
+
+:root[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --accent-primary: #059669;
+  --accent-secondary: #10b981;
+  --border-color: #e5e7eb;
+  --card-bg: #ffffff;
+  --card-hover: #f9fafb;
+  --card-active: #f3f4f6;
+  --tooltip-bg: #ffffff;
+  --tooltip-border: #e5e7eb;
+  --progress-shine: rgba(0, 0, 0, 0.1);
+  --progress-glow: rgba(5, 150, 105, 0.2);
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 body {
   width: 400px;
   min-height: 300px;
   padding: 16px;
-  font-family: Arial, sans-serif;
-  background-color: #1a1a1a;
-  color: #ffffff;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   margin: 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }
 
 .container {
-  @apply flex flex-col gap-4 min-h-[300px];
+  @apply flex flex-col gap-4 min-h-[300px] relative;
+}
+
+.theme-toggle {
+  @apply absolute top-4 right-4 p-2 rounded-full transition-colors;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.theme-toggle:hover {
+  background-color: var(--card-hover);
 }
 
 h1 {
-  @apply text-2xl font-bold text-center mb-4 text-green-400;
-}
-
-.domain-container {
-  @apply bg-gray-800 rounded-lg p-4 mb-2 transition-all duration-300 hover:transform hover:scale-102 border border-gray-700;
-}
-
-.level-bar {
-  @apply flex flex-col gap-2;
-}
-
-.domain-info {
-  @apply flex justify-between items-center;
-}
-
-.domain-name {
-  @apply font-semibold text-lg text-white;
-}
-
-.domain-level {
-  @apply text-green-400 font-bold px-2 py-1 bg-gray-900 rounded;
-}
-
-.progress-bar {
-  @apply w-full h-4 bg-gray-700 rounded-full overflow-hidden border border-gray-600;
-}
-
-.progress {
-  @apply h-full bg-gradient-to-r from-green-500 to-green-400 transition-all duration-300;
-}
-
-.stats {
-  @apply flex justify-between text-sm text-gray-400 mt-2;
-}
-
-.empty-state {
-  @apply flex flex-col items-center justify-center h-[200px] text-center p-4 bg-gray-800 rounded-lg border border-gray-700;
-}
-
-.error-state {
-  @apply flex flex-col items-center justify-center h-[200px] text-center p-4 bg-gray-800 rounded-lg border border-red-800;
+  @apply text-2xl font-bold text-center mb-4;
+  color: var(--accent-primary);
 }
 
 #domains-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   @apply flex flex-col gap-3 overflow-y-auto max-h-[400px] p-1;
+}
+
+.domain-container {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  @apply rounded-lg p-4 mb-2 transition-all duration-300 hover:transform hover:scale-102 relative;
+}
+
+.domain-container:hover {
+  background-color: var(--card-hover);
+}
+
+.domain-container.active {
+  background-color: var(--card-active);
+  border-color: var(--accent-primary);
+  animation: pulse 2s infinite;
+}
+
+.domain-container:hover .tooltip {
+  @apply opacity-100 visible;
+  transform: translateY(0);
+}
+
+.domain-info {
+  @apply flex justify-between items-center mb-3;
+}
+
+.domain-name-container {
+  @apply flex items-center gap-2;
+}
+
+.domain-favicon {
+  @apply w-6 h-6 rounded-sm p-0.5;
+  background-color: var(--bg-secondary);
+}
+
+.domain-name-wrapper {
+  @apply flex flex-col;
+}
+
+.domain-name {
+  color: var(--text-primary);
+  @apply font-semibold text-lg;
+}
+
+.domain-original {
+  color: var(--text-secondary);
+  @apply text-xs;
+}
+
+.domain-level {
+  color: var(--accent-primary);
+  background-color: var(--bg-secondary);
+  @apply font-bold px-3 py-1 rounded ml-1 flex-shrink-0 text-sm;
+}
+
+.rename-btn {
+  @apply p-2 rounded transition-colors cursor-pointer opacity-50 hover:opacity-100;
+  background-color: var(--bg-secondary);
+}
+
+.progress-bar {
+  @apply w-full h-4 rounded-full overflow-hidden border;
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.progress {
+  @apply h-full relative overflow-hidden;
+  background: linear-gradient(
+    90deg,
+    var(--accent-primary),
+    var(--accent-secondary)
+  );
+  transition: width 0.3s ease-in-out;
+}
+
+.progress-glow {
+  @apply absolute inset-0 opacity-50;
+  background: radial-gradient(
+    circle at center,
+    var(--progress-glow) 0%,
+    transparent 70%
+  );
+}
+
+.progress-shine {
+  @apply absolute inset-0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--progress-shine),
+    transparent
+  );
+  animation: shine 2s infinite;
+}
+.tooltip {
+  @apply absolute right-0 bottom-0 mb-2 bg-gray-900 rounded-lg p-3 shadow-xl z-10
+         opacity-0 invisible transition-all duration-200 pointer-events-none
+         border border-gray-700 text-sm;
+  transform: translateX(-50%) translateY(-10px);
+  background-color: var(--tooltip-bg);
+  border-color: var(--tooltip-border);
+  min-width: 180px;
+}
+
+/* .tooltip::after {
+  content: "";
+  @apply absolute left-0 bottom-1/2 w-0 h-0 transform -translate-x-1/2 translate-y-full;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid var(--tooltip-bg);
+} */
+
+.tooltip-content {
+  @apply flex flex-col gap-2;
+}
+
+.tooltip-header {
+  color: var(--accent-primary);
+  border-color: var(--border-color);
+  @apply font-bold border-b pb-2 mb-1;
+}
+
+.tooltip-row {
+  color: var(--text-secondary);
+  @apply flex justify-between items-center;
+}
+
+.tooltip-row.highlight {
+  color: var(--accent-primary);
+  @apply font-semibold;
+}
+
+.tooltip-divider {
+  border-color: var(--border-color);
+  @apply border-t my-2;
+}
+
+.stats {
+  color: var(--text-secondary);
+  @apply flex justify-between text-sm mt-2;
+}
+
+.empty-state {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  @apply flex flex-col items-center justify-center h-[200px] text-center p-4 rounded-lg border;
+}
+
+.error-state {
+  background-color: var(--card-bg);
+  border-color: #991b1b;
+  @apply flex flex-col items-center justify-center h-[200px] text-center p-4 rounded-lg border;
 }

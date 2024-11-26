@@ -4,6 +4,10 @@ export interface DomainStats {
   level: number;
   experience: number;
   lastVisit: number;
+  displayName?: string;
+  isActive?: boolean;
+  todayTimeSpent?: number;
+  todayStartTime?: number;
 }
 
 export interface DomainData {
